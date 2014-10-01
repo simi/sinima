@@ -16,7 +16,7 @@ module Sinima
     end
 
     get '/' do
-      files = Dir.glob(File.join(settings.video_folder, '*.webm')).collect{|f| File.basename(f)}
+      files = Dir.glob(File.join(settings.video_folder, '*.webm')).collect{|f| request.url + File.basename(f)}
       content_type :json
       files.to_json
     end
@@ -25,7 +25,7 @@ module Sinima
       tempfile = params[:file][:tempfile] 
       filename = params[:file][:filename] 
       FileUtils.cp(tempfile.path, File.join(settings.video_folder, filename))
-      request.url + '/' + filename
+      request.url + filename
     end
   end
 end
