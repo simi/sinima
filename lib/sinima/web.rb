@@ -8,11 +8,16 @@ module Sinima
     set :video_folder,  Proc.new { File.join(public_folder, "videos") }
 
     get '/:name' do
-      erb :video
+      if File.exists?(File.join(settings.video_folder, params[:name]))
+        erb :video
+      else
+        status 404
+      end
     end
 
     get '/' do
-      files = Dir.glob(File.join(settings.video_folder, '*.webm'))
+      files = Dir.glob(File.join(settings.video_folder, '*.webm')).collect{|f| File.basename(f)}
+      content_type :json
       files.to_json
     end
 
